@@ -26,11 +26,11 @@ DEFAULT_DATA_QUALITY_RULESET = """
     ]
 """
 
-# Script generated for node a
-a_node1779688875800 = glueContext.create_dynamic_frame.from_catalog(database="stedi", table_name="accelerometer_landing", transformation_ctx="a_node1779688875800")
-
 # Script generated for node c
 c_node1779688877333 = glueContext.create_dynamic_frame.from_catalog(database="stedi", table_name="customer_trusted", transformation_ctx="c_node1779688877333")
+
+# Script generated for node a
+a_node1779723585716 = glueContext.create_dynamic_frame.from_options(format_options={"multiLine": "false"}, connection_type="s3", format="json", connection_options={"paths": ["s3://stedi-sthiti/accelerometer_landing/"], "recurse": True}, transformation_ctx="a_node1779723585716")
 
 # Script generated for node SQL Query
 SqlQuery0 = '''
@@ -40,7 +40,7 @@ join c
 on a.user = c.email
 
 '''
-SQLQuery_node1779688941911 = sparkSqlQuery(glueContext, query = SqlQuery0, mapping = {"a":a_node1779688875800, "c":c_node1779688877333}, transformation_ctx = "SQLQuery_node1779688941911")
+SQLQuery_node1779688941911 = sparkSqlQuery(glueContext, query = SqlQuery0, mapping = {"c":c_node1779688877333, "a":a_node1779723585716}, transformation_ctx = "SQLQuery_node1779688941911")
 
 # Script generated for node Amazon S3
 EvaluateDataQuality().process_rows(frame=SQLQuery_node1779688941911, ruleset=DEFAULT_DATA_QUALITY_RULESET, publishing_options={"dataQualityEvaluationContext": "EvaluateDataQuality_node1779688809838", "enableDataQualityResultsPublishing": True}, additional_options={"dataQualityResultsPublishing.strategy": "BEST_EFFORT", "observations.scope": "ALL"})
